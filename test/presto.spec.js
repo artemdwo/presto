@@ -114,7 +114,7 @@ describe('JSONPlaceholder', () => {
         .expect(200)
         .end(function (err, result) {
           if (err) done(err)
-          console.log(result.body)
+
           expect(JSON.stringify(result.body)).to.equal(JSON.stringify(post))
           done()
         })
@@ -125,7 +125,7 @@ describe('JSONPlaceholder', () => {
         'id': 1,
         'name': 'Leanne Graham',
         'username': 'Bret',
-        'email': 'Sincere@april.biz'        
+        'email': 'Sincere@april.biz'
       }
 
       request
@@ -136,6 +136,77 @@ describe('JSONPlaceholder', () => {
 
           expect(result.body).to.include(user)
           done()
+        })
+    })
+  })
+
+  context('Resource deletion function', () => {
+    it('Returns success when deletes default post', (done) => {
+      request
+        .delete('/posts/1')
+        .expect(200, done)
+    })
+
+    it('Returns success when deletes default user', (done) => {
+      request
+        .delete('/users/1')
+        .expect(200, done)
+    })
+
+    it('Deletes newly created post', (done) => {
+      const post = {
+        title: 'foo',
+        body: 'bar',
+        userId: 1
+      }
+
+      let id
+
+      request
+        .post('/posts')
+        .send(post)
+        .expect(201)
+        .end(function (err, result) {
+          if (err) done(err)
+
+          id = result.body.id
+
+          request
+            .delete('/posts/' + id)
+            .expect(200)
+            .end(function (err) {
+              if (err) done(err)
+
+              request
+                .get('/posts/' + id)
+                .expect(404, done)
+            })
+        })
+    })
+
+    it('Post is not available after deletion', (done) => {
+      request
+        .delete('/posts/1')
+        .expect(200)
+        .end(function (err) {
+          if (err) done(err)
+
+          request
+            .get('/posts/1')
+            .expect(404, done)
+        })
+    })
+
+    it('User is not available after deletion', (done) => {
+      request
+        .delete('/users/1')
+        .expect(200)
+        .end(function (err) {
+          if (err) done(err)
+
+          request
+            .get('/users/1')
+            .expect(404, done)
         })
     })
   })
