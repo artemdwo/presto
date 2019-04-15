@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "pRESTo - a set of tests for JSONPlaceholder with Mocha, Chai and SuperTest",
   "scripts": {
-    "test": "mocha -- test/*.spec.js"
+    "test": "mocha -- test/*.spec.js",
+    "lint": "./node_modules/eslint/bin/eslint.js test/*.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,9 @@
     "chai-like": "^1.1.1",
     "mocha": "^6.1.3",
     "supertest": "^4.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.17.1"
   }
 }
